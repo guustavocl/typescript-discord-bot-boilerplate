@@ -1,8 +1,8 @@
 {
-  "name": "ts-discord-bot-boirletplate",
+  "name": "ts-discord-bot-boilerplate",
   "version": "1.0.0",
   "description": "just a typescript boilerplate to start a new discord bot using discord.js",
-  "repository": "https://github.com/guustavocl/ts-discord-bot-boirletplate",
+  "repository": "https://github.com/guustavocl/ts-discord-bot-boilerplate",
   "author": "guustavocl - https://gus.sh/",
   "license": "MIT",
   "main": "src/index.ts",
