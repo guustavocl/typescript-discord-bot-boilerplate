@@ -15,7 +15,7 @@ export interface BotClient extends Client {
     mode: string;
     mongoUrl: string;
     debugHook?: WebhookClient | undefined;
-    guild: string;
-    owner: string;
+    guildId: string;
+    ownerId: string;
   };
 }

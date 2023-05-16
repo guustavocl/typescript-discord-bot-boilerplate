@@ -20,7 +20,7 @@ const recursiveLoadSlashCommands = async (bot: BotClient, rootDir: string) => {
       } else {
         const name = file.split(".")[0];
         const command = await import(finalPath);
-        bot.slashCommands.set(name, command[name] as SlashCommand);
+        bot.slashCommands.set(name, command["default"] as SlashCommand);
         logger.info(`slash command ${file} loaded`);
       }
     }
@@ -55,12 +55,12 @@ export const botConfig = async (bot: BotClient) => {
     logger.error('Missing "BOT_TOKEN" environment variables!');
     process.exit(1);
   }
-  if (!process.env.BOT_GUILD) {
-    logger.error('Missing "BOT_GUILD" environment variables!');
+  if (!process.env.BOT_GUILD_ID) {
+    logger.error('Missing "BOT_GUILD_ID" environment variables!');
     process.exit(1);
   }
-  if (!process.env.BOT_OWNER) {
-    logger.error('Missing "BOT_OWNER" environment variables!');
+  if (!process.env.BOT_OWNER_ID) {
+    logger.error('Missing "BOT_OWNER_ID" environment variables!');
     process.exit(1);
   }
   if (!process.env.PROD_MONGO_URL) {
@@ -82,8 +82,8 @@ export const botConfig = async (bot: BotClient) => {
           url: process.env.BOT_WEBHOOK,
         })
       : undefined,
-    guild: process.env.BOT_GUILD,
-    owner: process.env.BOT_OWNER,
+    guildId: process.env.BOT_GUILD_ID,
+    ownerId: process.env.BOT_OWNER_ID,
   };
 
   const rootDir = bot.config.mode === "production" ? "build" : "src";

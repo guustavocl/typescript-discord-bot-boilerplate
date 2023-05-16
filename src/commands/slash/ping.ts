@@ -3,8 +3,9 @@ import { BotClient } from "../../interfaces/BotClient";
 import { SlashCommand } from "../../interfaces/SlashCommand";
 import { errorHandler } from "../../utils/errorHandler";
 
-export const ping: SlashCommand = {
-  data: new SlashCommandBuilder().setName("ping").setDescription("Just a ping command."),
+const commandName = "ping";
+const pingSlashCommand: SlashCommand = {
+  data: new SlashCommandBuilder().setName(commandName).setDescription("Just a ping command."),
   run: async (bot: BotClient, interaction: ChatInputCommandInteraction<CacheType>) => {
     try {
       await interaction.deferReply();
@@ -14,7 +15,8 @@ export const ping: SlashCommand = {
 
       await interaction.editReply({ embeds: [embed] });
     } catch (err) {
-      await errorHandler(bot, err, `Error on ping slash command`);
+      await errorHandler(bot, err, `Error on ${commandName} slash command`);
     }
   },
 };
+export default pingSlashCommand;

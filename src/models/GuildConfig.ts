@@ -13,26 +13,38 @@ export interface GuildConfigProps extends Document {
   prefix: string;
 }
 
-const GuildConfigSchema = new Schema({
-  guildId: {
-    type: String,
-    required: true,
-    unique: true,
+const GuildConfigSchema = new Schema(
+  {
+    guildId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    guildName: { type: String },
+    ownerId: { type: String },
+    icon: { type: String },
+    banner: { type: String },
+    shardId: { type: Number, default: 0 },
+    memberCount: { type: Number, default: 0 },
+    large: { type: Boolean, default: false },
+    totalTriggers: {
+      type: Number,
+      required: false,
+      unique: false,
+      default: 0,
+    },
+    prefix: { required: true, type: String, default: ">" },
   },
-  guildName: { type: String },
-  ownerId: { type: String },
-  icon: { type: String },
-  banner: { type: String },
-  shardId: { type: Number, default: 0 },
-  memberCount: { type: Number, default: 0 },
-  large: { type: Boolean, default: false },
-  totalTriggers: {
-    type: Number,
-    required: false,
-    unique: false,
-    default: 0,
-  },
-  prefix: { required: true, type: String, default: ">" },
-});
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (document, returnedObject) => {
+        delete returnedObject.__v;
+        delete returnedObject.updatedAt;
+        delete returnedObject.createdAt;
+      },
+    },
+  }
+);
 
 export default model<GuildConfigProps>("GuildConfig", GuildConfigSchema);

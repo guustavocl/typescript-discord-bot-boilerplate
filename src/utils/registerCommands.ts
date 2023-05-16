@@ -26,7 +26,7 @@ export const registerCommands = async (bot: BotClient) => {
       });
     } else {
       logger.info("Registering to home guild only!");
-      await rest.put(Routes.applicationGuildCommands(bot.user.id, bot.config.guild), { body: commandData });
+      await rest.put(Routes.applicationGuildCommands(bot.user.id, bot.config.guildId), { body: commandData });
     }
   } catch (err) {
     await errorHandler(bot, err, "Error while registering slash commands");
