@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "just a typescript boilerplate to start a new discord bot using discord.js",
   "repository": "https://github.com/guustavocl/typescript-discord-bot-boilerplate",
-  "author": "guustavocl - https://gus.sh/",
+  "author": "@guustavocl - https://gus.sh/",
   "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
