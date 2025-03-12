@@ -3,7 +3,8 @@ import { Document, model, Schema } from "mongoose";
 export interface GuildConfigProps extends Document {
   guildId: string;
   guildName: string;
-  ownerId: string;
+  owner: string;
+  botModerators: string[];
   icon: string;
   banner: string;
   shardId: number;
@@ -13,7 +14,7 @@ export interface GuildConfigProps extends Document {
   prefix: string;
 }
 
-const GuildConfigSchema = new Schema(
+const guildConfigSchema = new Schema(
   {
     guildId: {
       type: String,
@@ -21,7 +22,8 @@ const GuildConfigSchema = new Schema(
       unique: true,
     },
     guildName: { type: String },
-    ownerId: { type: String },
+    owner: { type: String },
+    botModerators: [{ type: String }],
     icon: { type: String },
     banner: { type: String },
     shardId: { type: Number, default: 0 },
@@ -47,4 +49,4 @@ const GuildConfigSchema = new Schema(
   }
 );
 
-export default model<GuildConfigProps>("GuildConfig", GuildConfigSchema);
+export default model<GuildConfigProps>("GuildConfig", guildConfigSchema);

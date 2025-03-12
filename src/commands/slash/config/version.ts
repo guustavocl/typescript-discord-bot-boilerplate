@@ -16,7 +16,7 @@ const versionSlashCommand: SlashCommand = {
 
       await interaction.editReply({ embeds: [embed] });
     } catch (err) {
-      await errorHandler(bot, err, `Error on ${commandName} slash command`);
+      await errorHandler(err, `Error on ${commandName} slash command`);
     }
   },
 };

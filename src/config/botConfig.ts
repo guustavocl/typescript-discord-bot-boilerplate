@@ -25,7 +25,7 @@ const recursiveLoadSlashCommands = async (bot: BotClient, rootDir: string) => {
       }
     }
   } catch (err) {
-    await errorHandler(bot, err, `Error loading slash commands`);
+    errorHandler(err, `Error loading slash commands`);
   }
 };
 
@@ -46,21 +46,25 @@ const recursiveLoadMessageCommands = async (bot: BotClient, rootDir: string) => 
       }
     }
   } catch (err) {
-    await errorHandler(bot, err, `Error loading slash commands`);
+    errorHandler(err, `Error loading slash commands`);
   }
 };
 
 export const botConfig = async (bot: BotClient) => {
-  if (!process.env.BOT_TOKEN) {
-    logger.error('Missing "BOT_TOKEN" environment variables!');
+  if (process.env.NODE_MODE === "production" && !process.env.BOT_TOKEN_PROD) {
+    logger.error('Missing "BOT_TOKEN_PROD" environment variables!');
+    process.exit(1);
+  }
+  if (process.env.NODE_MODE !== "production" && !process.env.BOT_TOKEN_DEV) {
+    logger.error('Missing "BOT_TOKEN_DEV" environment variables!');
     process.exit(1);
   }
   if (!process.env.BOT_GUILD_ID) {
-    logger.error('Missing "BOT_GUILD_ID" environment variables!');
+    logger.error('Missing "BOT_GUILD" environment variables!');
     process.exit(1);
   }
   if (!process.env.BOT_OWNER_ID) {
-    logger.error('Missing "BOT_OWNER_ID" environment variables!');
+    logger.error('Missing "BOT_OWNER" environment variables!');
     process.exit(1);
   }
   if (!process.env.PROD_MONGO_URL) {
@@ -72,18 +76,28 @@ export const botConfig = async (bot: BotClient) => {
     process.exit(1);
   }
 
+  const production = process.env.NODE_MODE === "production";
+
   bot.cache = {};
   bot.config = {
-    token: process.env.BOT_TOKEN,
+    token: (production ? process.env.BOT_TOKEN_PROD : process.env.BOT_TOKEN_DEV) || "",
     mode: process.env.NODE_MODE || "test",
-    mongoUrl: process.env.NODE_MODE === "production" ? process.env.PROD_MONGO_URL : process.env.TEST_MONGO_URL,
-    debugHook: process.env.BOT_WEBHOOK
+    production: production,
+    mongoUrl: production ? process.env.PROD_MONGO_URL : process.env.TEST_MONGO_URL,
+    debugHook: production
+      ? process.env.BOT_WEBHOOK_PROD
+        ? new WebhookClient({
+            url: process.env.BOT_WEBHOOK_PROD,
+          })
+        : undefined
+      : process.env.BOT_WEBHOOK_DEV
       ? new WebhookClient({
-          url: process.env.BOT_WEBHOOK,
+          url: process.env.BOT_WEBHOOK_DEV,
         })
       : undefined,
     guildId: process.env.BOT_GUILD_ID,
     ownerId: process.env.BOT_OWNER_ID,
+    adminRoleId: "1076589065656336506",
   };
 
   const rootDir = bot.config.mode === "production" ? "build" : "src";

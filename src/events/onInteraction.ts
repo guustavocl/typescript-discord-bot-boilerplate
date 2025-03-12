@@ -4,12 +4,14 @@ import { errorHandler } from "../utils/errorHandler";
 
 export const onInteraction = async (bot: BotClient, interaction: Interaction) => {
   try {
+    if (!interaction.guild) return;
+
     if (interaction.isChatInputCommand()) {
       if (bot.slashCommands.get(interaction.commandName)) {
         await bot.slashCommands.get(interaction.commandName)?.run(bot, interaction);
       }
     }
   } catch (err) {
-    await errorHandler(bot, err, "Error on interaction event");
+    errorHandler(err, "Error on interaction event");
   }
 };

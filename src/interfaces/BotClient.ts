@@ -1,8 +1,8 @@
 import { SlashCommand } from "./SlashCommand";
 import { MessageCommand } from "./MessageCommand";
 import { Document } from "mongoose";
-import { GuildConfigProps } from "../models/GuildConfig";
 import { Client, WebhookClient } from "discord.js";
+import { GuildConfigProps } from "../models/Guild/GuildConfig";
 
 export interface BotClient extends Client {
   slashCommands: Map<string, SlashCommand>;
@@ -13,9 +13,11 @@ export interface BotClient extends Client {
   config: {
     token: string;
     mode: string;
+    production: boolean;
     mongoUrl: string;
     debugHook?: WebhookClient | undefined;
     guildId: string;
     ownerId: string;
+    adminRoleId: string;
   };
 }

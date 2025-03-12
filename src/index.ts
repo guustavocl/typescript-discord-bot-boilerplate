@@ -9,6 +9,7 @@ import { handleEvents } from "./events/_handleEvents";
 import { errorHandler } from "./utils/errorHandler";
 import { IntentOptions } from "./config/botIntents";
 import { registerCommands } from "./utils/registerCommands";
+import { getBotClient } from "./services/bot.service";
 
 const botApi = express();
 
@@ -26,10 +27,14 @@ const botApi = express();
       logger.info("Mongoose successfully connected!");
 
       handleEvents(bot);
-      await bot.login(bot.config.token).catch(err => errorHandler(bot, err, "Error on login"));
+      await bot.login(bot.config.token).catch(err => errorHandler(err, "Error on login"));
       await registerCommands(bot);
 
-      botApi.get("/", (req, res) => res.send("Discord bot is running"));
+      botApi.get("/", (req, res) => {
+        const bot = getBotClient();
+        if (bot && bot.isReady()) res.send("Discord bot is running");
+        res.status(500);
+      });
       botApi.get("/ping", (req, res) => res.send("pong"));
       http.createServer(botApi).listen(3000, () => logger.info("Bot API is up"));
     })

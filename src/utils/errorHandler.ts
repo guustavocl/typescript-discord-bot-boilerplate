@@ -1,18 +1,14 @@
-import { EmbedBuilder } from "discord.js";
-import { BotClient } from "../interfaces/BotClient";
 import logger from "./logger";
+import { webhookHandler } from "./webHookHandler";
 
-export const errorHandler = async (bot: BotClient, err: unknown, message: string) => {
-  const error = err as Error;
-  const stack = JSON.stringify(error.stack || { stack: "not found" }, null, 2);
-  logger.error(error.message, message);
-  logger.error(`Stack trace:\n${stack}`);
-
-  if (bot.config.debugHook) {
-    const embed = new EmbedBuilder();
-    embed.setTitle(message);
-    embed.setDescription(`\`\`\`\n${stack}\n\`\`\``);
-    embed.addFields([{ name: `Error message`, value: error.message }]);
-    await bot.config.debugHook.send({ embeds: [embed] });
+export const errorHandler = async (err: unknown, message: string) => {
+  let error, stack;
+  if (err) {
+    error = err as Error;
+    stack = JSON.stringify(error, Object.getOwnPropertyNames(error));
+    logger.error(error?.message, message);
+  } else {
+    logger.error(message);
   }
+  webhookHandler(`Error message`, error?.message || message || "no message", stack);
 };

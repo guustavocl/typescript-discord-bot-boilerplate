@@ -10,7 +10,7 @@ export const ping: MessageCommand = {
     try {
       message?.reply("pong!");
     } catch (err) {
-      await errorHandler(bot, err, `Error on ping slash command`);
+      await errorHandler(err, `Error on ping slash command`);
     }
   },
 };

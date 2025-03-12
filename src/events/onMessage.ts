@@ -1,18 +1,18 @@
 import { Message } from "discord.js";
 import { BotClient } from "../interfaces/BotClient";
 import { errorHandler } from "../utils/errorHandler";
-import GuildConfig from "../models/GuildConfig";
+import GuildConfig from "../models/Guild/GuildConfig";
 
 export const onMessage = async (bot: BotClient, message: Message) => {
   try {
-    if (message.author.bot || !message.content || !message.guild) {
+    if (message.author.bot || !message.content || !message.guild || message.guild.id !== bot.config.guildId) {
       return;
     }
 
     const guildConfig = await GuildConfig.findOneAndUpdate(
       { guildId: message.guild.id },
       { $inc: { totalTriggers: 1 } },
-      { upsert: true }
+      { upsert: true },
     );
 
     if (guildConfig) {
@@ -30,6 +30,6 @@ export const onMessage = async (bot: BotClient, message: Message) => {
       }
     }
   } catch (error) {
-    await errorHandler(bot, error, "Error on message event");
+    errorHandler(error, "Error on message event");
   }
 };

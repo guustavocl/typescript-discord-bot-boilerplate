@@ -29,6 +29,6 @@ export const registerCommands = async (bot: BotClient) => {
       await rest.put(Routes.applicationGuildCommands(bot.user.id, bot.config.guildId), { body: commandData });
     }
   } catch (err) {
-    await errorHandler(bot, err, "Error while registering slash commands");
+    await errorHandler(err, "Error while registering slash commands");
   }
 };
